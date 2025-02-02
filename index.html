@@ -13,9 +13,10 @@
 <body>
     <!-- 首页大图展示区 -->
     <section id="home" class="hero-section">
+        <canvas class="hero-canvas"></canvas>
         <div class="hero-content">
             <h1 class="animate-text">一程设计</h1>
-            <p class="animate-text">专注于空间设计与用户体验</p>
+            <p class="animate-text">专注于品牌设计与用户体验</p>
             <a href="#works" class="cta-button">查看作品</a>
         </div>
     </section>
@@ -31,20 +32,18 @@
         </div>
     </section>
 
-    <!-- 页脚社交媒体链接区 -->
-    <footer id="contact" class="contact-section">
-        <div class="container">
-            <h2 class="section-title">联系方式</h2>
-            <p class="contact-text">如果您对我的作品感兴趣，欢迎通过以下方式联系我</p>
-            <!-- 社交媒体图标链接 -->
-            <div class="social-links">
-                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-behance"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-dribbble"></i></a>
-            </div>
+    <!-- 联系部分 -->
+    <section class="contact-section" id="contact">
+        <h2 class="contact-text">联系我们</h2>
+        <div class="social-links">
+            <a href="#" class="social-icon" data-type="微信">
+                <i class="fab fa-weixin"></i>
+            </a>
+            <a href="#" class="social-icon" data-type="QQ">
+                <i class="fab fa-qq"></i>
+            </a>
         </div>
-    </footer>
+    </section>
 
     <!-- 幻灯片遮罩层 -->
     <div class="slideshow-overlay">
@@ -54,5 +53,6 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="background.js"></script>
 </body>
 </html> 

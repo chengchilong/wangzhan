@@ -31,48 +31,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 项目数据
     const projectFolders = [
-        {
-            name: '28号院',
-            folder: 'XiangMu/28号院',
-            images: ['1.JPG'],
-            order: 1
-        },
-        {
-            name: '古城',
-            folder: 'XiangMu/古城',
-            images: ['1.JPG'],
-            order: 2
-        },
-        {
-            name: '圆形广场',
-            folder: 'XiangMu/圆形广场',
-            images: ['1.JPG'],
-            order: 3
-        },
-        {
-            name: '翠南',
-            folder: 'XiangMu/翠南',
-            images: ['1.JPG'],
-            order: 4
-        },
-        {
-            name: '永东南社区开放办公区',
-            folder: 'XiangMu/永东南社区开放办公区',
-            images: ['1.JPG'],
-            order: 5
-        },
-        {
-            name: '北京市京源学校',
-            folder: 'XiangMu/北京市京源学校',
-            images: ['1.JPG'],
-            order: 6
-        }
-    ].sort((a, b) => a.order - b.order);
+        ['28号院', 1],
+        ['古城', 2],
+        ['圆形广场', 3],
+        ['翠南', 4],
+        ['永东南社区开放办公区', 5],
+        ['北京市京源学校', 6]
+    ].map(([name, order]) => ({
+        name,
+        folder: name,  // 只保存项目名称
+        images: ['1.JPG'],
+        order
+    })).sort((a, b) => a.order - b.order);
 
     // 创建项目卡片的函数
     function createProjectCard(project) {
         const firstImage = project.images[0];
-        const imagePath = `${project.folder}/${firstImage}`;
+        const imagePath = `https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/XiangMu/${encodeURIComponent(project.name)}/1.jpg`;
         
         return `
             <div class="masonry-item" data-folder="${project.folder}">
@@ -158,12 +133,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         loadImages() {
             this.container.innerHTML = '';
-            // 只加载图片
             this.images.sort((a, b) => {
-                // 从路径中提取数字
                 const numA = parseInt(a.match(/(\d+)\.JPG$/)[1]);
                 const numB = parseInt(b.match(/(\d+)\.JPG$/)[1]);
-                return numA - numB;  // 按数字大小升序排列
+                return numA - numB;
             }).forEach((imagePath, index) => {
                 const newImage = new Image();
                 newImage.className = 'slideshow-image';
@@ -174,7 +147,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 newImage.onerror = () => {
                     console.log('图片加载失败:', imagePath);
                 };
-                newImage.src = imagePath;
+                const projectName = this.currentFolder;  // 直接使用文件夹名称
+                const encodedName = encodeURIComponent(projectName);
+                newImage.src = `https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/XiangMu/${encodedName}/${index + 1}.jpg`;
             });
         }
     };

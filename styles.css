@@ -51,7 +51,7 @@ html::-webkit-scrollbar {
 
 /* 瀑布流布局优化 */
 .masonry-grid {
-    columns: 5;  /* 默认5列 */
+    columns: 3;  /* 默认3列 */
     column-gap: 36px;
     width: 100%;
     padding: 0 36px;
@@ -84,19 +84,21 @@ html::-webkit-scrollbar {
 
 @media (max-width: 768px) {
     .masonry-grid {
-        columns: 2;
+        columns: 3;  /* 平板保持3列 */
     }
 }
 
 @media (max-width: 480px) {
     .masonry-grid {
-        columns: 1;
+        columns: 3;  /* 手机也保持3列 */
+        column-gap: 12px;  /* 减小手机上的间距 */
+        padding: 0 12px;  /* 减小手机上的边距 */
     }
 }
 
 .masonry-item {
     break-inside: avoid;
-    margin-bottom: 36px;  /* 添加底部间距 */
+    margin-bottom: 36px;
     display: block;
     width: 100%;
     font-size: 16px;
@@ -106,11 +108,12 @@ html::-webkit-scrollbar {
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;  /* 添加过渡效果 */
 }
 
 .masonry-item:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);  /* 减小悬停时的阴影效果 */
+    transform: scale(1.02);  /* 添加缩放效果 */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .masonry-content {
@@ -145,6 +148,9 @@ html::-webkit-scrollbar {
     justify-content: center;
     background: white;
     padding: 10px;
+    position: relative;  /* 确保标题始终可见 */
+    z-index: 1;  /* 提高标题层级 */
+    transform: translateZ(0);  /* 防止缩放时标题模糊 */
 }
 
 .item-title {
@@ -182,12 +188,18 @@ html::-webkit-scrollbar {
     width: 200px;
     text-align: center;
     position: relative;
+    transition: transform 0.3s ease;  /* 添加过渡效果 */
+}
+
+.tab-btn:hover {
+    transform: translateY(-3px);  /* 向上移动3像素 */
 }
 
 .tab-btn.active {
     background: var(--primary-color);
     color: white;
     box-shadow: none;
+    transform: none;  /* 激活状态不需要移动效果 */
 }
 
 /* 幻灯片样式 */
@@ -234,7 +246,7 @@ html::-webkit-scrollbar {
 /* 首页大图部分 */
 .hero-section {
     height: 100vh;
-    background: url('img/1.jpg') center/cover no-repeat;
+    background: #1a1a1a;  /* 深色背景 */
     position: relative;
     display: flex;
     align-items: center;
@@ -242,6 +254,17 @@ html::-webkit-scrollbar {
     text-align: center;
     color: white;
     margin-top: 0;
+    overflow: hidden;  /* 确保动画不会溢出 */
+}
+
+/* Canvas背景样式 */
+.hero-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
 }
 
 .hero-section::before {
@@ -251,7 +274,7 @@ html::-webkit-scrollbar {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
     z-index: 1;  /* 确保渐变遮罩在背景之上 */
 }
 
@@ -324,44 +347,65 @@ html::-webkit-scrollbar {
 /* 联系部分调整 */
 .contact-section {
     background: #333;
-    padding: 80px 0;
+    padding: 60px 0;
     text-align: center;
 }
 
 .contact-text {
     color: white;
     margin-bottom: 2rem;
+    font-size: 2.5rem;  /* 加大字体 */
+    font-weight: bold;
 }
 
 /* 社交媒体链接区域样式 */
 .social-section {
     background: #333;
-    padding: 3rem 0;
+    padding: 2rem 0 4rem;
 }
 
 /* 社交媒体图标样式 */
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: 3rem;  /* 增加图标间距 */
 }
 
 .social-icon {
-    width: 50px;
-    height: 50px;
+    width: 60px;  /* 加大图标尺寸 */
+    height: 60px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.15);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 1.5rem;
+    font-size: 2rem;
     transition: all 0.3s;
+    position: relative;
 }
 
 .social-icon:hover {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.25);
     transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+}
+
+/* 添加图标提示文字 */
+.social-icon::after {
+    content: attr(data-type);
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.social-icon:hover::after {
+    opacity: 1;
 }
 
 /* 响应式调整 */
