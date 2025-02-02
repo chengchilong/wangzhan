@@ -36,7 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
         ['圆形广场', 3],
         ['翠南', 4],
         ['永东南社区开放办公区', 5],
-        ['北京市京源学校', 6]
+        ['北京市京源学校', 6],
+        ['今日家园', 7],
+        ['28号院长廊', 8],
+        ['远洋风景', 9]
+
     ].map(([name, order]) => ({
         name,
         folder: name,  // 只保存项目名称
@@ -47,11 +51,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // 创建项目卡片的函数
     function createProjectCard(project) {
         const firstImage = project.images[0];
-        const imagePath = `https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/XiangMu/${encodeURIComponent(project.name)}/1.jpg`;
+        // 添加图片压缩参数
+        const imagePath = `https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/XiangMu/${encodeURIComponent(project.name)}/1.jpg?x-oss-process=image/resize,w_800,m_lfit`;
         
         return `
             <div class="masonry-item" data-folder="${project.folder}">
                 <div class="masonry-content">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
                     <img src="${imagePath}" alt="${project.name}" loading="lazy">
                 </div>
                 <div class="item-info">
@@ -73,6 +81,9 @@ document.addEventListener('DOMContentLoaded', function() {
             tabBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             
+            // 显示加载状态
+            masonryGrid.classList.add('loading');
+            
             // 获取选中的分类
             const category = this.dataset.category;
             
@@ -87,11 +98,32 @@ document.addEventListener('DOMContentLoaded', function() {
             filteredProjects.forEach(project => {
                 masonryGrid.innerHTML += createProjectCard(project);
             });
-            setTimeout(() => {
+
+            // 等待所有图片加载完成
+            const images = masonryGrid.querySelectorAll('img');
+            Promise.all(Array.from(images).map(img => {
+                if (img.complete) return Promise.resolve();
+                return new Promise(resolve => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                });
+            })).then(() => {
+                // 移除加载状态并显示内容
+                masonryGrid.classList.remove('loading');
                 masonryGrid.style.opacity = '1';
-            }, 50);
+            });
         });
     });
+
+    // 图片加载完成后处理
+    function handleImageLoad(img) {
+        img.classList.add('loaded');
+        const spinner = img.parentElement.querySelector('.loading-spinner');
+        if (spinner) {
+            spinner.style.opacity = '0';
+            setTimeout(() => spinner.remove(), 300);
+        }
+    }
 
     // 渲染所有项目
     projectFolders.forEach(project => {
@@ -101,20 +133,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // 图片加载完成后重新计算布局
     const images = document.querySelectorAll('.masonry-content img');
     Promise.all(Array.from(images).map(img => {
-        if (img.complete) return Promise.resolve();
-        return new Promise(resolve => img.addEventListener('load', resolve));
-    })).then(() => {
-        // 所有图片加载完成后显示瀑布流
-        const masonryGrid = document.querySelector('.masonry-grid');
-        masonryGrid.style.opacity = '1';
-        
-        // 在移动端添加额外处理
-        if (window.innerWidth <= 768) {
-            // 强制触发重排以确保正确布局
-            masonryGrid.style.display = 'none';
-            masonryGrid.offsetHeight; // 触发重排
-            masonryGrid.style.display = '';
+        if (img.complete) {
+            handleImageLoad(img);
+            return Promise.resolve();
         }
+        return new Promise(resolve => {
+            img.onload = () => {
+                handleImageLoad(img);
+                resolve();
+            };
+            img.addEventListener('load', resolve);
+        });
+    })).then(() => {
+        // 所有图片加载完成
+        masonryGrid.classList.remove('loading');
     });
 
     // 幻灯片功能
@@ -122,23 +154,27 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay: document.querySelector('.slideshow-overlay'),
         container: document.querySelector('.slideshow-container'),
         currentFolder: '',
-        images: [],  // 只存储图片
+        images: [],
 
         show(folder) {
             this.currentFolder = folder;
-            // 只获取图片，没有视频
             this.images = Array.from({length: 10}, (_, i) => `${folder}/${i + 1}.JPG`);
             this.loadImages();
             this.overlay.style.display = 'block';
-            setTimeout(() => this.overlay.style.opacity = '1', 0);
+            // 使用 RAF 确保过渡动画顺滑
+            requestAnimationFrame(() => {
+                this.overlay.style.opacity = '1';
+                this.overlay.classList.add('active');
+            });
         },
 
         hide() {
+            this.overlay.classList.remove('active');
             this.overlay.style.opacity = '0';
             setTimeout(() => {
                 this.overlay.style.display = 'none';
-                this.container.innerHTML = '';  // 清空内容
-            }, 300);
+                this.container.innerHTML = '';
+            }, 500);  // 匹配过渡时间
         },
 
         loadImages() {
@@ -153,11 +189,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 newImage.alt = `图片 ${index + 1}`;
                 newImage.onload = () => {
                     this.container.appendChild(newImage);
+                    // 添加延迟显示效果
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            newImage.classList.add('visible');
+                        }, index * 100);  // 每张图片依次显示
+                    });
                 };
                 newImage.onerror = () => {
                     console.log('图片加载失败:', imagePath);
                 };
-                const projectName = this.currentFolder;  // 直接使用文件夹名称
+                const projectName = this.currentFolder;
                 const encodedName = encodeURIComponent(projectName);
                 newImage.src = `https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/XiangMu/${encodedName}/${index + 1}.jpg`;
             });
