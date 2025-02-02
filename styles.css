@@ -55,6 +55,8 @@ html::-webkit-scrollbar {
     column-gap: 36px;
     width: 100%;
     padding: 0 36px;
+    opacity: 0;  /* 初始隐藏，等图片加载完再显示 */
+    transition: opacity 0.3s ease;
 }
 
 /* 响应式列数调整 */
@@ -79,36 +81,49 @@ html::-webkit-scrollbar {
 @media (max-width: 1024px) {
     .masonry-grid {
         columns: 3;
+        column-gap: 24px;
+        padding: 0 24px;
     }
 }
 
 @media (max-width: 768px) {
     .masonry-grid {
-        columns: 3;  /* 平板保持3列 */
+        columns: 2;  /* 平板改为2列 */
+        column-gap: 20px;
+        padding: 0 20px;
+    }
+    
+    .masonry-item {
+        margin-bottom: 20px;  /* 减小项目间距 */
     }
 }
 
 @media (max-width: 480px) {
     .masonry-grid {
-        columns: 3;  /* 手机也保持3列 */
-        column-gap: 12px;  /* 减小手机上的间距 */
-        padding: 0 12px;  /* 减小手机上的边距 */
+        columns: 1;  /* 手机端改为单列 */
+        column-gap: 16px;
+        padding: 0 16px;
+    }
+    
+    .masonry-item {
+        margin-bottom: 16px;
     }
 }
 
 .masonry-item {
-    break-inside: avoid;
+    break-inside: avoid;  /* 防止项目被分割 */
     margin-bottom: 36px;
     display: block;
     width: 100%;
-    font-size: 16px;
     line-height: 1.5;
     background: white;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;  /* 添加过渡效果 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    page-break-inside: avoid;  /* 兼容性支持 */
+    -webkit-column-break-inside: avoid;  /* Safari支持 */
 }
 
 .masonry-item:hover {

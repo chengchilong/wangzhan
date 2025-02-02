@@ -104,7 +104,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (img.complete) return Promise.resolve();
         return new Promise(resolve => img.addEventListener('load', resolve));
     })).then(() => {
-        // 所有图片加载完成，可以添加额外的布局调整
+        // 所有图片加载完成后显示瀑布流
+        const masonryGrid = document.querySelector('.masonry-grid');
+        masonryGrid.style.opacity = '1';
+        
+        // 在移动端添加额外处理
+        if (window.innerWidth <= 768) {
+            // 强制触发重排以确保正确布局
+            masonryGrid.style.display = 'none';
+            masonryGrid.offsetHeight; // 触发重排
+            masonryGrid.style.display = '';
+        }
     });
 
     // 幻灯片功能
