@@ -1,0 +1,391 @@
+/* 重置所有元素的默认样式 */
+* {
+    margin: 0;          /* 移除所有外边距 */
+    padding: 0;         /* 移除所有内边距 */
+    box-sizing: border-box;  /* 使用更直观的盒模型计算方式 */
+}
+
+/* 定义全局颜色变量，方便统一管理和修改 */
+:root {
+    --primary-color: #2d5fff;     /* 主要强调色 - 蓝色，用于重要按钮和激活状态 */
+    --secondary-color: #ff6b6b;   /* 次要强调色 - 粉红色，用于悬停效果 */
+    --text-color: #2c3e50;        /* 文字颜色 - 深灰色，提供良好的可读性 */
+    --light-bg: #f8f9fa;          /* 背景色 - 浅灰色，柔和的背景色调 */
+}
+
+/* 基础文字样式设置 */
+body {
+    font-family: 'Roboto', sans-serif;  /* 使用Roboto字体，无衬线字体作为后备 */
+    line-height: 1.6;                   /* 行高为字体大小的1.6倍，提高可读性 */
+    color: var(--text-color);           /* 使用预定义的文字颜色 */
+    background-color: var(--light-bg);  /* 使用预定义的背景色 */
+}
+
+/* 页面内容最大宽度限制 */
+.container {
+    max-width: 1200px;    /* 内容最大宽度1200像素 */
+    margin: 0 auto;       /* 水平居中 */
+    padding: 0;           /* 移除内边距 */
+}
+
+/* 添加平滑滚动效果 */
+html {
+    scroll-behavior: smooth;           /* 启用平滑滚动 */
+    scrollbar-width: none;            /* Firefox隐藏滚动条 */
+    -ms-overflow-style: none;         /* IE和Edge隐藏滚动条 */
+}
+
+/* 为Chrome等浏览器隐藏滚动条 */
+html::-webkit-scrollbar {
+    display: none;                    /* 隐藏滚动条但保留滚动功能 */
+}
+
+/* 作品展示区样式调整 */
+.works-section {
+    padding-top: 70px;
+    padding-bottom: 40px;
+    background: var(--light-bg);
+    overflow: hidden;
+    scroll-margin-top: 20px;
+}
+
+/* 瀑布流布局优化 */
+.masonry-grid {
+    columns: 5;  /* 默认5列 */
+    column-gap: 36px;
+    width: 100%;
+    padding: 0 36px;
+}
+
+/* 响应式列数调整 */
+@media (min-width: 2400px) {
+    .masonry-grid {
+        columns: 8;
+    }
+}
+
+@media (max-width: 1920px) {
+    .masonry-grid {
+        columns: 6;
+    }
+}
+
+@media (max-width: 1440px) {
+    .masonry-grid {
+        columns: 4;
+    }
+}
+
+@media (max-width: 1024px) {
+    .masonry-grid {
+        columns: 3;
+    }
+}
+
+@media (max-width: 768px) {
+    .masonry-grid {
+        columns: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .masonry-grid {
+        columns: 1;
+    }
+}
+
+.masonry-item {
+    break-inside: avoid;
+    margin-bottom: 36px;  /* 添加底部间距 */
+    display: block;
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.5;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.masonry-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);  /* 减小悬停时的阴影效果 */
+}
+
+.masonry-content {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    line-height: 0;
+    background: #f0f0f0;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateZ(0);
+}
+
+.masonry-content img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    object-fit: cover;
+    vertical-align: bottom;
+    flex-shrink: 0;
+    backface-visibility: hidden;
+}
+
+/* 项目标题区域固定高度 */
+.item-info {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    padding: 10px;
+}
+
+.item-title {
+    font-size: 18px;
+    color: var(--text-color);
+    margin: 0;
+}
+
+/* 项目分类选项卡样式 */
+.works-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    padding: 0 24px;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tab-btn {
+    padding: 18px 42px;
+    border: none;
+    border-radius: 24px;
+    background: white;
+    color: #666;
+    font-size: 24px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: none;
+    height: fit-content;
+    line-height: 1;
+    width: 200px;
+    text-align: center;
+    position: relative;
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: none;
+}
+
+/* 幻灯片样式 */
+.slideshow-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+
+.slideshow-overlay::-webkit-scrollbar {
+    display: none;
+}
+
+.slideshow-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.slideshow-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    margin: 10px 0;
+    display: block;
+}
+
+/* 首页大图部分 */
+.hero-section {
+    height: 100vh;
+    background: url('img/1.jpg') center/cover no-repeat;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-top: 0;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
+    z-index: 1;  /* 确保渐变遮罩在背景之上 */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;  /* 确保内容在最上层 */
+    padding: 0 20px;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+    animation: breathe 3s ease-in-out infinite;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+    animation: breathe 3s ease-in-out infinite;
+    animation-delay: 0.5s;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    margin-top: 2rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    background: var(--secondary-color);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 呼吸灯动画效果 */
+@keyframes breathe {
+    0% {
+        opacity: 0.5;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 2px 2px 20px rgba(255, 255, 255, 0.5);
+    }
+    100% {
+        opacity: 0.5;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* 作品展示区标题 */
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 32px;  /* 增加标题与瀑布流的间距为原来的2倍 */
+    color: var(--text-color);
+}
+
+/* 联系部分调整 */
+.contact-section {
+    background: #333;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.contact-text {
+    color: white;
+    margin-bottom: 2rem;
+}
+
+/* 社交媒体链接区域样式 */
+.social-section {
+    background: #333;
+    padding: 3rem 0;
+}
+
+/* 社交媒体图标样式 */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.social-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    transition: all 0.3s;
+}
+
+.social-icon:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-3px);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .social-links {
+        gap: 1rem;
+    }
+    
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
