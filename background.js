@@ -137,4 +137,187 @@ class Background {
 // 页面加载完成后初始化背景
 document.addEventListener('DOMContentLoaded', () => {
     new Background();
+});
+
+// Canvas 背景动画
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.querySelector('.hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    let lines = [];
+    let grid = [];
+    
+    // 颜色定义
+    const colors = {
+        background: 'hsl(45, 25%, 95%)', // 仿宣纸暖白色
+        ink: 'hsla(0, 0%, 10%, 0.8)',    // 墨黑色
+        blue: 'hsla(215, 30%, 35%, 0.6)', // 黛蓝色
+        brown: 'hsla(25, 30%, 45%, 0.5)'  // 赭石色
+    };
+
+    // 调整画布大小
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        initGrid();
+    }
+
+    // 水墨粒子类
+    class InkParticle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 3 + 2;
+            this.speedX = Math.random() * 2 - 1;
+            this.speedY = Math.random() * 2 - 1;
+            this.life = 1;
+            this.alpha = Math.random() * 0.5 + 0.1;
+        }
+
+        update() {
+            this.x += this.speedX * 0.5;
+            this.y += this.speedY * 0.5;
+            this.life -= 0.003;
+            this.alpha *= 0.995;
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(0, 0%, 10%, ${this.alpha})`;
+            ctx.fill();
+        }
+    }
+
+    // 建筑线条类
+    class ArchLine {
+        constructor() {
+            this.reset();
+        }
+
+        reset() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.length = Math.random() * 100 + 50;
+            this.angle = Math.random() * Math.PI * 2;
+            this.speed = Math.random() * 0.5 + 0.1;
+            this.life = 1;
+            this.color = Math.random() < 0.5 ? colors.blue : colors.brown;
+        }
+
+        update() {
+            this.angle += this.speed * 0.02;
+            this.life -= 0.005;
+            if (this.life <= 0) this.reset();
+        }
+
+        draw() {
+            const endX = this.x + Math.cos(this.angle) * this.length;
+            const endY = this.y + Math.sin(this.angle) * this.length;
+            
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(endX, endY);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+    }
+
+    // 初始化透视网格
+    function initGrid() {
+        grid = [];
+        const gridSize = 50;
+        const perspectiveOffset = height * 0.3;
+
+        for (let y = -gridSize; y < height + gridSize; y += gridSize) {
+            for (let x = -gridSize; x < width + gridSize; x += gridSize) {
+                const distanceY = (y - height/2) / (height/2);
+                const perspectiveX = x + distanceY * perspectiveOffset;
+                grid.push({
+                    x: perspectiveX,
+                    y: y,
+                    originalX: x,
+                    originalY: y
+                });
+            }
+        }
+    }
+
+    // 绘制网格
+    function drawGrid() {
+        ctx.strokeStyle = 'hsla(215, 20%, 35%, 0.1)';
+        ctx.lineWidth = 0.5;
+        
+        grid.forEach(point => {
+            ctx.beginPath();
+            ctx.moveTo(point.x, point.y);
+            ctx.lineTo(point.x + 50, point.y);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(point.x, point.y);
+            ctx.lineTo(point.x, point.y + 50);
+            ctx.stroke();
+        });
+    }
+
+    // 鼠标交互效果
+    let mouseX = 0, mouseY = 0;
+    canvas.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        // 添加水墨粒子
+        for (let i = 0; i < 3; i++) {
+            particles.push(new InkParticle(mouseX, mouseY));
+        }
+    });
+
+    // 初始化
+    function init() {
+        resize();
+        // 创建初始线条
+        for (let i = 0; i < 20; i++) {
+            lines.push(new ArchLine());
+        }
+        // 创建初始粒子
+        for (let i = 0; i < 50; i++) {
+            particles.push(new InkParticle(
+                Math.random() * width,
+                Math.random() * height
+            ));
+        }
+    }
+
+    // 动画循环
+    function animate() {
+        ctx.fillStyle = colors.background;
+        ctx.fillRect(0, 0, width, height);
+
+        // 绘制网格
+        drawGrid();
+
+        // 更新和绘制线条
+        lines.forEach(line => {
+            line.update();
+            line.draw();
+        });
+
+        // 更新和绘制粒子
+        particles = particles.filter(p => p.life > 0);
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    // 窗口大小改变时重置画布
+    window.addEventListener('resize', resize);
+
+    // 启动动画
+    init();
+    animate();
 }); 

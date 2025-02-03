@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一程设计 - 个人作品集</title>
+    <title>中精通设计 - 项目展示</title>
     <!-- 引入外部样式表 -->
     <link rel="stylesheet" href="styles.css">
     <!-- 引入 Roboto 字体，支持多种字重 -->
@@ -12,13 +12,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <!-- 首页大图展示区：包含动画画布和主要内容 -->
+    <!-- 首页大图展示区：包含视频背景和主要内容 -->
     <section id="home" class="hero-section">
-        <canvas class="hero-canvas"></canvas> <!-- 用于绘制动态背景效果 -->
+        <div class="video-background">
+            <video id="bgVideo" muted playsinline autoplay loop>
+                <!-- 视频源会通过 JavaScript 动态切换 -->
+            </video>
+        </div>
         <div class="hero-content">
-            <h1 class="animate-text">一程设计</h1> <!-- 带动画效果的标题 -->
-            <p class="animate-text">专注于品牌设计与用户体验</p> <!-- 带动画效果的副标题 -->
-            <a href="#works" class="cta-button">查看作品</a> <!-- 跳转到作品区的按钮 -->
+            <h1 class="animate-text">中精通设计</h1>
+            <p class="animate-text">专注于品牌设计与用户体验</p>
+            <a href="#works" class="cta-button">查看作品</a>
         </div>
     </section>
 
@@ -55,8 +59,8 @@
         </div>
     </div>
 
-    <!-- 引入主要脚本文件 -->
-    <script src="script.js"></script> <!-- 处理页面交互和图片展示逻辑 -->
-    <script src="background.js"></script> <!-- 处理首页动态背景效果 -->
+    <script src="script.js"></script>
+    <script src="background.js"></script>
+    <script src="video-background.js"></script>
 </body>
 </html> 

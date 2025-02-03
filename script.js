@@ -47,14 +47,14 @@ document.addEventListener('DOMContentLoaded', function() {
     ].map(([name, order]) => ({
         name,        // 项目名称
         folder: name, // 文件夹名称（与项目名称相同）
-        images: ['1.JPG'], // 默认只加载第一张图片
+        images: ['1.jpg'], // 注意这里改为小写的 jpg
         order        // 项目排序序号
-    })).sort((a, b) => a.order - b.order); // 按序号排序
+    })).sort((a, b) => a.order - b.order);
 
     // 创建单个项目卡片的HTML结构
     function createProjectCard(project) {
         const firstImage = project.images[0];
-        // 构建OSS图片URL，添加压缩参数
+        // 构建OSS图片URL，修改图片扩展名为小写
         const imagePath = `https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/XiangMu/${encodeURIComponent(project.name)}/1.jpg?x-oss-process=image/resize,w_800,m_lfit`;
         
         return `
@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 : projectFolders.filter(project => project.name === category);
             
             // 清空并重新渲染网格
-            masonryGrid.style.opacity = '0';
             masonryGrid.innerHTML = '';
             filteredProjects.forEach(project => {
                 masonryGrid.innerHTML += createProjectCard(project);
@@ -105,15 +104,23 @@ document.addEventListener('DOMContentLoaded', function() {
             // 等待所有图片加载完成
             const images = masonryGrid.querySelectorAll('img');
             Promise.all(Array.from(images).map(img => {
-                if (img.complete) return Promise.resolve();
+                if (img.complete) {
+                    handleImageLoad(img);
+                    return Promise.resolve();
+                }
                 return new Promise(resolve => {
-                    img.onload = resolve;
-                    img.onerror = resolve;
+                    img.onload = () => {
+                        handleImageLoad(img);
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        console.error('Failed to load image:', img.src);
+                        resolve();
+                    };
                 });
             })).then(() => {
                 // 移除加载状态并显示内容
                 masonryGrid.classList.remove('loading');
-                masonryGrid.style.opacity = '1';
             });
         });
     });
@@ -307,4 +314,10 @@ document.addEventListener('DOMContentLoaded', function() {
             slideshow.show(folder);
         }
     });
+
+    // 添加调试信息
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+        console.error('Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo + '\nColumn: ' + columnNo + '\nError object: ' + JSON.stringify(error));
+        return false;
+    };
 }); 

@@ -345,9 +345,10 @@ html::-webkit-scrollbar {
 /* 首页内容区样式 */
 .hero-content {
     position: relative;
-    z-index: 2;  /* 确保内容在画布上层 */
+    z-index: 3;  /* 提高 z-index 确保内容在遮罩之上 */
     max-width: 800px;
     padding: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 添加文字阴影提高可读性 */
 }
 
 .hero-content h1 {
@@ -570,4 +571,46 @@ html::-webkit-scrollbar {
 
 .slideshow-container.loaded::before {
     display: none;
+}
+
+.video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* 添加黑色半透明遮罩 */
+.video-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);  /* 黑色遮罩，0.3 表示30%透明度 */
+    z-index: 2;  /* 确保遮罩在视频上层 */
+}
+
+.video-background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translateX(-50%) translateY(-50%);
+    object-fit: cover;
+    transition: opacity 0.5s ease;  /* 添加淡入淡出效果 */
+    z-index: 1;  /* 确保视频在遮罩下层 */
+}
+
+/* 确保内容在视频和遮罩上层 */
+.hero-content {
+    z-index: 3;  /* 提高 z-index 确保内容在遮罩之上 */
+    position: relative;
 }
