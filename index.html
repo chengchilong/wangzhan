@@ -4,55 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>一程设计 - 个人作品集</title>
-    <!-- 引入样式表和字体 -->
+    <!-- 引入外部样式表 -->
     <link rel="stylesheet" href="styles.css">
+    <!-- 引入 Roboto 字体，支持多种字重 -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- 引入Font Awesome图标库 -->
+    <!-- 引入 Font Awesome 图标库，用于社交媒体图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <!-- 首页大图展示区 -->
+    <!-- 首页大图展示区：包含动画画布和主要内容 -->
     <section id="home" class="hero-section">
-        <canvas class="hero-canvas"></canvas>
+        <canvas class="hero-canvas"></canvas> <!-- 用于绘制动态背景效果 -->
         <div class="hero-content">
-            <h1 class="animate-text">一程设计</h1>
-            <p class="animate-text">专注于品牌设计与用户体验</p>
-            <a href="#works" class="cta-button">查看作品</a>
+            <h1 class="animate-text">一程设计</h1> <!-- 带动画效果的标题 -->
+            <p class="animate-text">专注于品牌设计与用户体验</p> <!-- 带动画效果的副标题 -->
+            <a href="#works" class="cta-button">查看作品</a> <!-- 跳转到作品区的按钮 -->
         </div>
     </section>
 
-    <!-- 作品展示区 -->
+    <!-- 作品展示区：使用瀑布流布局展示项目 -->
     <section id="works" class="works-section">
         <div class="container">
-            <h2 class="section-title">作品展示</h2>
-            <!-- 瀑布流布局 -->
+            <h2 class="section-title">项目展示</h2>
+            <!-- 瀑布流网格容器 -->
             <div class="masonry-grid">
-                <!-- 项目卡片将由JavaScript动态生成 -->
+                <!-- 项目卡片将由 JavaScript 动态生成，实现瀑布流布局 -->
             </div>
         </div>
     </section>
 
-    <!-- 联系部分 -->
+    <!-- 联系方式区：展示社交媒体链接 -->
     <section class="contact-section" id="contact">
         <h2 class="contact-text">联系我们</h2>
         <div class="social-links">
+            <!-- 微信图标和链接 -->
             <a href="#" class="social-icon" data-type="微信">
                 <i class="fab fa-weixin"></i>
             </a>
+            <!-- QQ图标和链接 -->
             <a href="#" class="social-icon" data-type="QQ">
                 <i class="fab fa-qq"></i>
             </a>
         </div>
     </section>
 
-    <!-- 幻灯片遮罩层 -->
+    <!-- 幻灯片遮罩层：用于全屏展示项目图片 -->
     <div class="slideshow-overlay">
         <div class="slideshow-container">
-            <!-- 图片将由JavaScript动态添加 -->
+            <!-- 幻灯片图片将由 JavaScript 动态添加，支持图片切换效果 -->
         </div>
     </div>
 
-    <script src="script.js"></script>
-    <script src="background.js"></script>
+    <!-- 引入主要脚本文件 -->
+    <script src="script.js"></script> <!-- 处理页面交互和图片展示逻辑 -->
+    <script src="background.js"></script> <!-- 处理首页动态背景效果 -->
 </body>
 </html> 
