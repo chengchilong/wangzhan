@@ -2,11 +2,7 @@ class VideoBackground {
     constructor() {
         this.videoElement = document.getElementById('bgVideo');
         this.videoUrls = [
-            'https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/img/video/bg1.mp4',
-            'https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/img/video/bg2.mp4',
-            'https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/img/video/bg3.mp4',
-            'https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/img/video/bg4.mp4',
-            'https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/img/video/bg5.mp4'
+            'https://chengchilong.oss-cn-wuhan-lr.aliyuncs.com/img/video/1.mp4',
         ];
         this.currentVideoIndex = 0;
         this.init();
